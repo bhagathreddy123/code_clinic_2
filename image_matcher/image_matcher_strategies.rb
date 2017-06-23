@@ -13,6 +13,8 @@ module ImageMatcherStrategies
 		'rows' => :match_position_by_pixel_rows,
 		'pixels' => :match_position_by_pixel_strings,
 		'fuzzy' => :match_position_by_pixel_objects,
+		'sad' => :match_position_by_sad,
+
 	}
 
 	private
@@ -109,8 +111,29 @@ module ImageMatcherStrategies
 				end
 			end
 		end
-
-
 	end
 
+	def match_position_by_sad
+		best_sad =1_000_000
+		search_rows.times do |y|
+			search_cols.times do |x|
+				puts "checking search image at #{x}, #{y}" if @verbose
+				sad = 0.0
+				template_image.rows.times do |j|
+					template_image.columns.times do |i|
+						s_pixel = search_image.pixel_color(x+i,y+j)
+						t_pixel = template_image.pixel_color(i,j)
+						sad += (s_pixel.intensity - t_pixel.intensity).abs
+					end
+				end
+
+				if sad < best_sad
+					puts " New best at #{x},#{y}: #{sad} " if @verbose
+					best_sad = sad
+					self.match_result = x,y
+				end
+			end
+		end
+		return match_result
+	end
 end
