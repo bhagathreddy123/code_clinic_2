@@ -150,7 +150,8 @@ module ImageMatcherStrategies
 		s_image = CvMat.load(search_image.filename)
 
 		result = s_image.match_template(t_image, :sqdiff_normed)
-				point = result.min_max_loca[2]	
+		point = result.min_max_loc[2]	
+			if point.x > 0 && point.y > 0
 				self.match_result = [point.x,point.y]
 			end
 			return match_result
