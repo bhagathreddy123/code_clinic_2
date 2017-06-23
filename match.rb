@@ -21,8 +21,8 @@ im = ImageMatcher.new
 im.search_image = search_image_path
 im.template_image = template_image_path
 im.verbose = true
-im.strategy = 'full'
-im.fuzz = 0.0
+im.strategy = 'fuzzy'
+im.fuzz = 0.2
 im.highlight_match = true
 im.match!
  

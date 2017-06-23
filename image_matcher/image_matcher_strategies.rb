@@ -11,7 +11,8 @@ module ImageMatcherStrategies
 	@@strategies = { 
 		'full' => :match_position_by_full_string,
 		'rows' => :match_position_by_pixel_rows,
-		'pixels' => :match_position_by_pixel_string,
+		'pixels' => :match_position_by_pixel_strings,
+		'fuzzy' => :match_position_by_pixel_objects,
 	}
 
 	private
@@ -85,5 +86,31 @@ module ImageMatcherStrategies
 		end
 	end
 
+	def match_position_by_pixel_objects
+		qfuzz = QuantumRange * fuzz
+		catch :found_match do
+			search_rows.times do |y|
+				search_cols do |x|
+					catch :try_next_position do
+						puts "Checking search image at #{x},#{y}" if @verbose
+						template_image.rows.times do |j|
+							template_image.columns.times do |i|
+								t_pixel = template_image.pixel_color(i,j)
+								s_pixel = search_image.pixel_color(x+i,y+j)
+								if !s_pixel.fcmp(t_pixel,qfuzz)
+									throw :try_next_position
+								end
+							end
+						end
+
+						self.match_result = x,y
+						through :found_match
+					end
+				end
+			end
+		end
+
+
+	end
 
 end
