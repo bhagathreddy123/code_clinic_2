@@ -5,7 +5,7 @@ module ImageMatcherStrategies
 	#im.verbose = true   checking in match.rb 23 line
 	#im.verbose = false   checking in match.rb 23 line need to run see the difference variation b/w each time run the test
 	# matching result testing chenaging im.strategy = 'row'  it is false
-	# matching result testing chenaging im.strategy = 'row'  it is false
+	# matching result testing chenaging im.strategy = 'row'  it is true
 	# matching result testing chenaging im.strategy = 'row'  to pixels
 
 	@@strategies = { 

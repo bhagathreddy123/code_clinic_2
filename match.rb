@@ -6,7 +6,7 @@ image_dir = File.join(this_dir,'images')
  
 image_tests = [
  
-[ 'haystack.png', 'needle.png'],
+[ 'app1.png', 'apple.png'],
  
 ]
 image_tests.each_with_index do |test_set,i|
