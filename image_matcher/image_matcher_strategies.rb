@@ -1,4 +1,4 @@
-module Image Matching Strategies
+module ImageMatcherStrategies
 	# add matching strategies 
 	#less lower resolutions png images files
 	#need to copy images in image folder
