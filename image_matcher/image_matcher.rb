@@ -1,6 +1,7 @@
 require 'RMagick'; include Magick
 require 'benchmark'
- 
+require 'opencv'; include OpenCV
+
 require_relative('image_matcher_strategies')
  
 class ImageMatcher

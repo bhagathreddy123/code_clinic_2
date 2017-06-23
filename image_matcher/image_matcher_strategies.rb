@@ -15,6 +15,7 @@ module ImageMatcherStrategies
 		'fuzzy' => :match_position_by_pixel_objects,
 		'sad' => :match_position_by_sad,
 		'similar' => :match_position_by_similar,
+		'opencv'  => :match_position_by_opencv,
  
 	}
  
@@ -142,5 +143,16 @@ module ImageMatcherStrategies
 		add_fuzz_to_images
 		self.match_result = search_image.find_similar_region(template_image)
 		return match_result
+	end
+
+	def match_position_by_opencv
+		t_image = CvMat.load(template_image.filename)
+		s_image = CvMat.load(search_image.filename)
+
+		result = s_image.match_template(t_image, :sqdiff_normed)
+				point = result.min_max_loca[2]	
+				self.match_result = [point.x,point.y]
+			end
+			return match_result
 	end
 end
