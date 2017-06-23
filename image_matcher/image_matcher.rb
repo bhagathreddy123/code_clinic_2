@@ -71,7 +71,12 @@ class ImageMatcher
 	end
 	 
 	def add_fuzz_to_images
-	# need to implement later
+		if fuzz
+			fuzz_as_percent = "#{fuzz.round(2)*100}%"
+			puts "Setting fuzz at #{fuzz_as_percent}" if @verbose
+			search_image.fuzz = fuzz_as_percent
+			template_image.fuzz = fuzz_as_percent
+		end
 	end
  
 	def strategy_method

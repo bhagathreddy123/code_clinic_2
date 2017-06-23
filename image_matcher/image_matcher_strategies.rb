@@ -1,22 +1,23 @@
-module ImageMatcherStrategies
+module Image Matching Strategies
 	# add matching strategies 
-	#less lower resoltions png imagesfiles
+	#less lower resolutions png images files
 	#need to copy images in image folder
 	#im.verbose = true   checking in match.rb 23 line
 	#im.verbose = false   checking in match.rb 23 line need to run see the difference variation b/w each time run the test
-	# matching result testing chenaging im.strategy = 'row'  it is false
-	# matching result testing chenaging im.strategy = 'row'  it is true
-	# matching result testing chenaging im.strategy = 'row'  to pixels
-
+	# matching result testing changing im.strategy = 'row'  it is false
+	# matching result testing changing im.strategy = 'row'  it is true
+	# matching result testing changing im.strategy = 'row'  to pixels
+ 
 	@@strategies = { 
 		'full' => :match_position_by_full_string,
 		'rows' => :match_position_by_pixel_rows,
 		'pixels' => :match_position_by_pixel_strings,
 		'fuzzy' => :match_position_by_pixel_objects,
 		'sad' => :match_position_by_sad,
-
+		'similar' => :match_position_by_similar,
+ 
 	}
-
+ 
 	private
 	#compare images by converting all image pixel to a string.
 	def match_position_by_full_string
@@ -34,10 +35,10 @@ module ImageMatcherStrategies
 					end
 				end
 			end
-
+ 
 		end	
 	end
-
+ 
 	def match_position_by_pixel_rows
 		catch :found_match do
 			search_rows.times do |y|
@@ -49,7 +50,7 @@ module ImageMatcherStrategies
 							# just checking first row not full string
 							t_row = template_image.export_pixels_to_str(0,j,t_width,1)
 							s_row = search_image.export_pixels_to_str(x,y+j,t_width,1)
-
+ 
 							if s_row != t_row
 								# if any row does not match then move on 
 								throw :try_next_position
@@ -64,7 +65,7 @@ module ImageMatcherStrategies
 			return match_result
 		
 	end
-
+ 
 	def match_position_by_pixel_strings
 		catch :found_match do
 			search_rows.times do |y|
@@ -78,7 +79,7 @@ module ImageMatcherStrategies
 								if s_pixel != t_pixel
 									throw :try_next_position
 								end
-
+ 
 							end
 						end
 							return match_result
@@ -87,7 +88,7 @@ module ImageMatcherStrategies
 			end
 		end
 	end
-
+ 
 	def match_position_by_pixel_objects
 		qfuzz = QuantumRange * fuzz
 		catch :found_match do
@@ -104,7 +105,7 @@ module ImageMatcherStrategies
 								end
 							end
 						end
-
+ 
 						self.match_result = x,y
 						through :found_match
 					end
@@ -112,7 +113,7 @@ module ImageMatcherStrategies
 			end
 		end
 	end
-
+ 
 	def match_position_by_sad
 		best_sad =1_000_000
 		search_rows.times do |y|
@@ -126,7 +127,7 @@ module ImageMatcherStrategies
 						sad += (s_pixel.intensity - t_pixel.intensity).abs
 					end
 				end
-
+ 
 				if sad < best_sad
 					puts " New best at #{x},#{y}: #{sad} " if @verbose
 					best_sad = sad
@@ -134,6 +135,12 @@ module ImageMatcherStrategies
 				end
 			end
 		end
+		return match_result
+	end
+
+	def match_postion_by_similar
+		add_fuzz_to_images
+		self.match_result = search_image.find_similar_region(template_image)
 		return match_result
 	end
 end
