@@ -22,7 +22,7 @@ im.search_image = search_image_path
 im.template_image = template_image_path
 im.verbose = true
 im.strategy = 'similar'
-im.fuzz = 0.2
+im.fuzz = 0.0
 im.highlight_match = true
 im.match!
  
